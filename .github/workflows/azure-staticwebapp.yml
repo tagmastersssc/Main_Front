@@ -14,11 +14,8 @@ name: Deploy web app to Azure Static Web Apps
 
 on:
   push:
-    branches: [ "prod" ]
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches: [ "prod" ]
-
+    branches: [ "prod","uat" ]
+  workflow_dispatch:
 # Environment variables available to all jobs and steps in this workflow
 env:
   APP_LOCATION: "/" # location of your client code
