@@ -1,11 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "/bilailogocompleto.png";
+import CookieConsentLayer from "./components/CookieConsentLayer";
+import {
+  DEFAULT_COOKIE_PREFERENCES,
+  applyRuntimeCookiePermissions,
+  getInitialCookieState,
+  persistCookieConsent,
+  sanitizeCookiePreferences,
+  syncGoogleAnalyticsWithConsent,
+} from "./lib/privacy";
 
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL || "http://localhost:5173";
 const WHATSAPP_URL =
   import.meta.env.VITE_WHATSAPP_URL ||
   "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma.";
 const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || "hola@bilai.co";
+const SITE_URL = (import.meta.env.VITE_SITE_URL || "").trim().replace(/\/+$/, "");
+const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID || "").trim();
 
 const featureCards = [
   {
@@ -77,6 +88,29 @@ const complianceItems = [
   "Soporte para equipos operativos y financieros",
 ];
 
+const faqItems = [
+  {
+    question: "¿Qué es la facturación electrónica y cómo me ayuda con la DIAN?",
+    answer:
+      "La facturación electrónica es el proceso digital de emisión y validación de comprobantes. En BilAI automatizamos validaciones y estructura fiscal para que cumplas la DIAN con menos errores y menor tiempo operativo.",
+  },
+  {
+    question: "¿BilAI sirve para pymes, empresas grandes y personas naturales?",
+    answer:
+      "Sí. La plataforma se adapta a distintos tamaños de operación: desde personas naturales y negocios pequeños hasta empresas con mayor volumen de ventas e inventario.",
+  },
+  {
+    question: "¿Puedo gestionar inventario y ventas además de facturación electrónica?",
+    answer:
+      "Sí. BilAI integra facturación electrónica, inventarios, ventas y reportes en un solo sistema para que tu operación tenga trazabilidad completa y datos actualizados en tiempo real.",
+  },
+  {
+    question: "¿Qué tan rápido puedo empezar?",
+    answer:
+      "Puedes iniciar en pocos pasos: configuración fiscal, carga de catálogo y puesta en marcha guiada. El objetivo es que empieces a facturar y controlar tu operación desde el primer día.",
+  },
+];
+
 function App() {
   const [formData, setFormData] = useState({
     name: "",
@@ -84,6 +118,122 @@ function App() {
     company: "",
     message: "",
   });
+  const [cookieConsent, setCookieConsent] = useState(getInitialCookieState);
+  const [cookieDraft, setCookieDraft] = useState({ ...DEFAULT_COOKIE_PREFERENCES });
+  const [showCookieSettings, setShowCookieSettings] = useState(false);
+  const runtimeSiteUrl =
+    SITE_URL || (typeof window !== "undefined" ? window.location.origin.replace(/\/+$/, "") : "");
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "BilAI",
+    ...(runtimeSiteUrl
+      ? {
+          url: runtimeSiteUrl,
+          logo: `${runtimeSiteUrl}/bilailogocompleto.png`,
+        }
+      : {}),
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        email: CONTACT_EMAIL,
+        areaServed: "CO",
+        availableLanguage: ["es"],
+      },
+    ],
+  };
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "BilAI",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description:
+      "Software de facturación electrónica para Colombia con gestión de inventarios, ventas y reportes con IA.",
+    ...(runtimeSiteUrl ? { url: runtimeSiteUrl } : {}),
+  };
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+  const seoSchemas = [orgSchema, softwareSchema, faqSchema];
+
+  useEffect(() => {
+    applyRuntimeCookiePermissions(cookieConsent);
+  }, [cookieConsent]);
+
+  useEffect(() => {
+    syncGoogleAnalyticsWithConsent({
+      ...cookieConsent,
+      measurementId: GA_MEASUREMENT_ID,
+    });
+  }, [cookieConsent]);
+
+  const setCookieConsentAndClose = (preferences, status) => {
+    const normalizedPreferences = sanitizeCookiePreferences(preferences);
+    const nextState = {
+      hasDecision: true,
+      preferences: normalizedPreferences,
+    };
+
+    setCookieConsent(nextState);
+    setShowCookieSettings(false);
+    persistCookieConsent({
+      preferences: normalizedPreferences,
+      status,
+    });
+  };
+
+  const openCookieSettings = () => {
+    setCookieDraft({ ...cookieConsent.preferences });
+    setShowCookieSettings(true);
+  };
+
+  const closeCookieSettings = () => {
+    setShowCookieSettings(false);
+  };
+
+  const toggleDraftPreference = (key) => {
+    setCookieDraft((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  const acceptAllCookies = () => {
+    setCookieConsentAndClose(
+      {
+        necessary: true,
+        analytics: true,
+        marketing: true,
+      },
+      "accepted_all"
+    );
+  };
+
+  const rejectOptionalCookies = () => {
+    setCookieConsentAndClose(
+      {
+        necessary: true,
+        analytics: false,
+        marketing: false,
+      },
+      "necessary_only"
+    );
+  };
+
+  const saveCustomCookies = () => {
+    setCookieConsentAndClose(cookieDraft, "customized");
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -101,13 +251,23 @@ function App() {
 
   return (
     <div className="site-shell">
+      {seoSchemas.map((schema, index) => (
+        <script
+          key={`schema-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+
       <header className="site-header">
         <a href="#inicio" className="brand-link" aria-label="BilAI inicio">
           <img src={logo} alt="BilAI" className="brand-logo" />
         </a>
         <nav className="site-nav" aria-label="Navegación principal">
+          <a href="/facturacion-electronica-colombia/">Facturación electrónica</a>
           <a href="#producto">Producto</a>
           <a href="#soluciones">Soluciones</a>
+          <a href="#faq">FAQ</a>
           <a href="#ia">IA</a>
           <a href="#contacto">Contacto</a>
         </nav>
@@ -125,7 +285,7 @@ function App() {
         <section className="hero" id="inicio">
           <div className="hero-copy reveal">
             <p className="hero-kicker">Fintech colombiana para empresas y personas naturales</p>
-            <h1>Factura fácil. Cumple DIAN. Gestiona todo con IA.</h1>
+            <h1>Facturación electrónica DIAN para crecer sin fricción.</h1>
             <p className="hero-lead">
               BilAI transforma cómo administras facturación electrónica, inventarios, ventas y
               reportes para que tu operación sea más simple, más rápida y más confiable.
@@ -191,7 +351,49 @@ function App() {
         </section>
 
         <section className="signal-bar reveal">
-          <p>Una sola plataforma para ventas, facturación, inventario y reportes confiables.</p>
+          <p>
+            Tu software de facturación electrónica en Colombia, con inventario, ventas y reportes
+            conectados.
+          </p>
+        </section>
+
+        <section className="section section-soft reveal" id="facturacion-electronica">
+          <div className="section-head">
+            <p className="section-kicker">Facturación Electrónica</p>
+            <h2>La forma moderna de facturar electrónicamente en Colombia</h2>
+            <p>
+              Si estás buscando un sistema de facturación electrónica para cumplir con la DIAN,
+              BilAI centraliza emisión, validación y control operativo en una sola plataforma.
+            </p>
+            <div className="section-inline-actions">
+              <a className="btn-secondary" href="/facturacion-electronica-colombia/">
+                Ver landing especializada
+              </a>
+            </div>
+          </div>
+          <div className="seo-grid">
+            <article className="seo-card">
+              <h3>Cumplimiento DIAN asistido</h3>
+              <p>
+                Reduce riesgo de errores con flujos guiados y validaciones antes de emitir cada
+                factura electrónica.
+              </p>
+            </article>
+            <article className="seo-card">
+              <h3>Facturación para cualquier tipo de negocio</h3>
+              <p>
+                Empresas, pymes y personas naturales pueden operar en el mismo ecosistema sin
+                complejidad técnica.
+              </p>
+            </article>
+            <article className="seo-card">
+              <h3>Datos listos para decidir</h3>
+              <p>
+                Cada documento y venta alimenta reportes accionables para mejorar margen, rotación
+                de inventario y flujo de caja.
+              </p>
+            </article>
+          </div>
         </section>
 
         <section className="section reveal" id="producto">
@@ -266,6 +468,21 @@ function App() {
                 Agendar diagnóstico
               </a>
             </aside>
+          </div>
+        </section>
+
+        <section className="section section-soft reveal" id="faq">
+          <div className="section-head">
+            <p className="section-kicker">FAQ</p>
+            <h2>Preguntas frecuentes sobre facturación electrónica con BilAI</h2>
+          </div>
+          <div className="faq-grid">
+            {faqItems.map((item) => (
+              <article className="faq-card" key={item.question}>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
           </div>
         </section>
 
@@ -346,8 +563,28 @@ function App() {
 
       <footer className="site-footer">
         <img src={logo} alt="BilAI" />
-        <p>BilAI | Fintech Colombiana para facturación electrónica, inventarios, ventas y reportes.</p>
+        <div className="footer-meta">
+          <p>
+            BilAI | Fintech Colombiana para facturación electrónica, inventarios, ventas y
+            reportes.
+          </p>
+          <button type="button" className="footer-cookie-btn" onClick={openCookieSettings}>
+            Preferencias de cookies
+          </button>
+        </div>
       </footer>
+
+      <CookieConsentLayer
+        hasDecision={cookieConsent.hasDecision}
+        showSettings={showCookieSettings}
+        cookieDraft={cookieDraft}
+        onOpenSettings={openCookieSettings}
+        onCloseSettings={closeCookieSettings}
+        onToggleDraft={toggleDraftPreference}
+        onRejectOptional={rejectOptionalCookies}
+        onAcceptAll={acceptAllCookies}
+        onSaveCustom={saveCustomCookies}
+      />
     </div>
   );
 }
