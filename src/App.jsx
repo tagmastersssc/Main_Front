@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "/bilailogocompleto.png";
 import CookieConsentLayer from "./components/CookieConsentLayer";
 import {
@@ -15,13 +15,13 @@ const WHATSAPP_URL =
   import.meta.env.VITE_WHATSAPP_URL ||
   "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma.";
 const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || "hola@bilai.co";
-const SITE_URL = (import.meta.env.VITE_SITE_URL || "").trim().replace(/\/+$/, "");
 const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID || "").trim();
+const SITE_URL = (import.meta.env.VITE_SITE_URL || "").trim().replace(/\/+$/, "");
 
 const featureCards = [
   {
     icon: "receipt_long",
-    title: "Facturación electrónica lista para DIAN",
+    title: "Facturación electrónica lista para la Dian",
     description:
       "Emite comprobantes electrónicos en minutos, con validaciones inteligentes para cumplir normativa sin fricción.",
   },
@@ -82,7 +82,7 @@ const steps = [
 ];
 
 const complianceItems = [
-  "Flujos diseñados para cumplimiento DIAN",
+  "Flujos diseñados para cumplimiento con la Dian",
   "Controles automáticos para evitar errores frecuentes",
   "Trazabilidad completa de ventas, inventarios y reportes",
   "Soporte para equipos operativos y financieros",
@@ -90,24 +90,24 @@ const complianceItems = [
 
 const faqItems = [
   {
-    question: "¿Qué es la facturación electrónica y cómo me ayuda con la DIAN?",
+    question: "¿BilAI sirve para personas naturales, pymes y empresas?",
     answer:
-      "La facturación electrónica es el proceso digital de emisión y validación de comprobantes. En BilAI automatizamos validaciones y estructura fiscal para que cumplas la DIAN con menos errores y menor tiempo operativo.",
+      "Sí. BilAI está diseñada para adaptarse a operaciones pequeñas y grandes, con una experiencia simple desde el primer día.",
   },
   {
-    question: "¿BilAI sirve para pymes, empresas grandes y personas naturales?",
+    question: "¿Cómo me ayuda BilAI con la Dian?",
     answer:
-      "Sí. La plataforma se adapta a distintos tamaños de operación: desde personas naturales y negocios pequeños hasta empresas con mayor volumen de ventas e inventario.",
+      "BilAI simplifica la emisión de facturación electrónica y el control operativo para ayudarte a cumplir con la Dian con menos fricción.",
   },
   {
-    question: "¿Puedo gestionar inventario y ventas además de facturación electrónica?",
+    question: "¿Necesito instalar algo para comenzar?",
     answer:
-      "Sí. BilAI integra facturación electrónica, inventarios, ventas y reportes en un solo sistema para que tu operación tenga trazabilidad completa y datos actualizados en tiempo real.",
+      "No. Es una plataforma web. Te registras en pocos clics y comienzas a operar sin instalaciones ni procesos técnicos complejos.",
   },
   {
-    question: "¿Qué tan rápido puedo empezar?",
+    question: "¿Puedo probar BilAI antes de contratar?",
     answer:
-      "Puedes iniciar en pocos pasos: configuración fiscal, carga de catálogo y puesta en marcha guiada. El objetivo es que empieces a facturar y controlar tu operación desde el primer día.",
+      "Sí. Puedes iniciar con una prueba gratis de 1 mes para validar el ajuste con tu negocio.",
   },
 ];
 
@@ -123,6 +123,7 @@ function App() {
   const [showCookieSettings, setShowCookieSettings] = useState(false);
   const runtimeSiteUrl =
     SITE_URL || (typeof window !== "undefined" ? window.location.origin.replace(/\/+$/, "") : "");
+
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -143,6 +144,7 @@ function App() {
       },
     ],
   };
+
   const softwareSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -150,9 +152,10 @@ function App() {
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     description:
-      "Software de facturación electrónica para Colombia con gestión de inventarios, ventas y reportes con IA.",
+      "Software de facturación electrónica para Colombia con inventarios, ventas y reportes con IA.",
     ...(runtimeSiteUrl ? { url: runtimeSiteUrl } : {}),
   };
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -165,6 +168,7 @@ function App() {
       },
     })),
   };
+
   const seoSchemas = [orgSchema, softwareSchema, faqSchema];
 
   useEffect(() => {
@@ -253,7 +257,7 @@ function App() {
     <div className="site-shell">
       {seoSchemas.map((schema, index) => (
         <script
-          key={`schema-${index}`}
+          key={`home-schema-${index}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
@@ -264,7 +268,7 @@ function App() {
           <img src={logo} alt="BilAI" className="brand-logo" />
         </a>
         <nav className="site-nav" aria-label="Navegación principal">
-          <a href="/facturacion-electronica-colombia/">Facturación electrónica</a>
+          <a href="#facturacion-electronica">Facturación electrónica</a>
           <a href="#producto">Producto</a>
           <a href="#soluciones">Soluciones</a>
           <a href="#faq">FAQ</a>
@@ -285,7 +289,7 @@ function App() {
         <section className="hero" id="inicio">
           <div className="hero-copy reveal">
             <p className="hero-kicker">Fintech colombiana para empresas y personas naturales</p>
-            <h1>Facturación electrónica DIAN para crecer sin fricción.</h1>
+            <h1>Factura fácil. Cumple con la Dian. Gestiona todo con IA.</h1>
             <p className="hero-lead">
               BilAI transforma cómo administras facturación electrónica, inventarios, ventas y
               reportes para que tu operación sea más simple, más rápida y más confiable.
@@ -326,7 +330,7 @@ function App() {
                 <article>
                   <span className="material-symbols-rounded">receipt</span>
                   <h3>Factura electrónica</h3>
-                  <p>Emitida y validada para DIAN.</p>
+                  <p>Emitida y validada para la Dian.</p>
                 </article>
                 <article>
                   <span className="material-symbols-rounded">inventory_2</span>
@@ -345,52 +349,48 @@ function App() {
                 </article>
               </div>
             </div>
-            <div className="floating-note note-top">Listo para cumplimiento DIAN</div>
+            <div className="floating-note note-top">Listo para cumplimiento con la Dian</div>
             <div className="floating-note note-bottom">Soporte para equipos de cualquier tamaño</div>
           </div>
         </section>
 
         <section className="signal-bar reveal">
-          <p>
-            Tu software de facturación electrónica en Colombia, con inventario, ventas y reportes
-            conectados.
-          </p>
+          <p>Una sola plataforma para ventas, facturación, inventario y reportes confiables.</p>
         </section>
 
         <section className="section section-soft reveal" id="facturacion-electronica">
           <div className="section-head">
             <p className="section-kicker">Facturación Electrónica</p>
-            <h2>La forma moderna de facturar electrónicamente en Colombia</h2>
+            <h2>La forma más simple de facturar electrónicamente y cumplir con la Dian</h2>
             <p>
-              Si estás buscando un sistema de facturación electrónica para cumplir con la DIAN,
-              BilAI centraliza emisión, validación y control operativo en una sola plataforma.
+              Regístrate en pocos clics, sin instalación, y empieza a operar con facturación
+              electrónica, ventas, inventario y reportes desde una sola plataforma.
             </p>
             <div className="section-inline-actions">
               <a className="btn-secondary" href="/facturacion-electronica-colombia/">
-                Ver landing especializada
+                Ver página de facturación electrónica
               </a>
             </div>
           </div>
           <div className="seo-grid">
             <article className="seo-card">
-              <h3>Cumplimiento DIAN asistido</h3>
+              <h3>Cumplimiento con la Dian, sin complicaciones</h3>
               <p>
-                Reduce riesgo de errores con flujos guiados y validaciones antes de emitir cada
-                factura electrónica.
+                Estructura y validaciones pensadas para ayudarte a operar correctamente desde el
+                primer día.
               </p>
             </article>
             <article className="seo-card">
-              <h3>Facturación para cualquier tipo de negocio</h3>
+              <h3>Onboarding rápido para empezar hoy</h3>
               <p>
-                Empresas, pymes y personas naturales pueden operar en el mismo ecosistema sin
-                complejidad técnica.
+                Crea tu cuenta, configura lo esencial y empieza a emitir sin procesos largos ni
+                dependencias técnicas.
               </p>
             </article>
             <article className="seo-card">
-              <h3>Datos listos para decidir</h3>
+              <h3>Prueba gratis de 1 mes</h3>
               <p>
-                Cada documento y venta alimenta reportes accionables para mejorar margen, rotación
-                de inventario y flujo de caja.
+                Evalúa BilAI en tu operación real y decide con datos antes de avanzar a un plan.
               </p>
             </article>
           </div>
@@ -455,7 +455,7 @@ function App() {
               </div>
             </div>
             <aside className="compliance-panel">
-              <h3>Compromiso con DIAN y control operativo</h3>
+              <h3>Compromiso con la Dian y control operativo</h3>
               <ul>
                 {complianceItems.map((item) => (
                   <li key={item}>
@@ -474,7 +474,7 @@ function App() {
         <section className="section section-soft reveal" id="faq">
           <div className="section-head">
             <p className="section-kicker">FAQ</p>
-            <h2>Preguntas frecuentes sobre facturación electrónica con BilAI</h2>
+            <h2>Respuestas rápidas antes de comenzar</h2>
           </div>
           <div className="faq-grid">
             {faqItems.map((item) => (
@@ -564,10 +564,7 @@ function App() {
       <footer className="site-footer">
         <img src={logo} alt="BilAI" />
         <div className="footer-meta">
-          <p>
-            BilAI | Fintech Colombiana para facturación electrónica, inventarios, ventas y
-            reportes.
-          </p>
+          <p>BilAI | Fintech Colombiana para facturación electrónica, inventarios, ventas y reportes.</p>
           <button type="button" className="footer-cookie-btn" onClick={openCookieSettings}>
             Preferencias de cookies
           </button>
