@@ -27,7 +27,7 @@ const parseDotEnv = (content) => {
 };
 
 const envFromFile = existsSync(envPath) ? parseDotEnv(readFileSync(envPath, "utf8")) : {};
-const siteUrlRaw = (process.env.VITE_SITE_URL || envFromFile.VITE_SITE_URL || "http://localhost:5175")
+const siteUrlRaw = (process.env.VITE_SITE_URL || envFromFile.VITE_SITE_URL || "https://example.com")
   .trim()
   .replace(/\/+$/, "");
 const today = new Date().toISOString().slice(0, 10);

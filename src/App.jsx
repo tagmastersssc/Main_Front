@@ -10,7 +10,7 @@ import {
   syncGoogleAnalyticsWithConsent,
 } from "./lib/privacy";
 
-const LOGIN_URL = import.meta.env.VITE_LOGIN_URL || "http://localhost:5173";
+const LOGIN_URL = (import.meta.env.VITE_LOGIN_URL || "/login").trim();
 const WHATSAPP_URL =
   import.meta.env.VITE_WHATSAPP_URL ||
   "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma.";
