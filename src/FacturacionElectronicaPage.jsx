@@ -183,6 +183,7 @@ function FacturacionElectronicaPage() {
   const [cookieConsent, setCookieConsent] = useState(getInitialCookieState);
   const [cookieDraft, setCookieDraft] = useState({ ...DEFAULT_COOKIE_PREFERENCES });
   const [showCookieSettings, setShowCookieSettings] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const runtimeSiteUrl =
     SITE_URL || (typeof window !== "undefined" ? window.location.origin.replace(/\/+$/, "") : "");
@@ -234,6 +235,27 @@ function FacturacionElectronicaPage() {
   useEffect(() => {
     setSeoMetadata({ pageUrl: runtimeSiteUrl });
   }, [runtimeSiteUrl]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const mobileBreakpoint = window.matchMedia("(max-width: 760px)");
+    const handleBreakpointChange = (event) => {
+      if (!event.matches) {
+        setIsMobileNavOpen(false);
+      }
+    };
+
+    if (typeof mobileBreakpoint.addEventListener === "function") {
+      mobileBreakpoint.addEventListener("change", handleBreakpointChange);
+      return () => mobileBreakpoint.removeEventListener("change", handleBreakpointChange);
+    }
+
+    mobileBreakpoint.addListener(handleBreakpointChange);
+    return () => mobileBreakpoint.removeListener(handleBreakpointChange);
+  }, []);
 
   const setCookieConsentAndClose = (preferences, status) => {
     const normalizedPreferences = sanitizeCookiePreferences(preferences);
@@ -292,6 +314,14 @@ function FacturacionElectronicaPage() {
     setCookieConsentAndClose(cookieDraft, "customized");
   };
 
+  const handleMobileNavToggle = () => {
+    setIsMobileNavOpen((prev) => !prev);
+  };
+
+  const closeMobileNav = () => {
+    setIsMobileNavOpen(false);
+  };
+
   return (
     <div className="site-shell">
       {pageSchemas.map((schema, index) => (
@@ -306,18 +336,42 @@ function FacturacionElectronicaPage() {
         <a href="/" className="brand-link" aria-label="Volver al sitio principal de BilAI">
           <img src={logo} alt="BilAI" className="brand-logo" />
         </a>
-        <nav className="site-nav" aria-label="Navegación principal de la landing">
-          <a href="#beneficios">Beneficios</a>
-          <a href="#sectores">Sectores</a>
-          <a href="#proceso">Proceso</a>
-          <a href="#faq">FAQ</a>
-          <a href="#contacto">Contacto</a>
+        <button
+          type="button"
+          className="header-menu-toggle"
+          aria-expanded={isMobileNavOpen}
+          aria-controls="site-fe-nav"
+          aria-label={isMobileNavOpen ? "Cerrar menú" : "Abrir menú"}
+          onClick={handleMobileNavToggle}
+        >
+          <span className="material-symbols-rounded">{isMobileNavOpen ? "close" : "menu"}</span>
+        </button>
+        <nav
+          id="site-fe-nav"
+          className={`site-nav${isMobileNavOpen ? " is-open" : ""}`}
+          aria-label="Navegación principal de la landing"
+        >
+          <a href="#beneficios" onClick={closeMobileNav}>
+            Beneficios
+          </a>
+          <a href="#sectores" onClick={closeMobileNav}>
+            Sectores
+          </a>
+          <a href="#proceso" onClick={closeMobileNav}>
+            Proceso
+          </a>
+          <a href="#faq" onClick={closeMobileNav}>
+            FAQ
+          </a>
+          <a href="#contacto" onClick={closeMobileNav}>
+            Contacto
+          </a>
         </nav>
         <div className="header-actions">
-          <a className="header-login" href="/">
+          <a className="header-login" href="/" onClick={closeMobileNav}>
             Ir al inicio
           </a>
-          <a className="header-cta" href="#contacto">
+          <a className="header-cta" href="#contacto" onClick={closeMobileNav}>
             Prueba gratis 1 mes
           </a>
         </div>

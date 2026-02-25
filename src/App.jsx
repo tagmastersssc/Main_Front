@@ -120,6 +120,7 @@ function App() {
     company: "",
     message: "",
   });
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [cookieConsent, setCookieConsent] = useState(getInitialCookieState);
   const [cookieDraft, setCookieDraft] = useState({ ...DEFAULT_COOKIE_PREFERENCES });
   const [showCookieSettings, setShowCookieSettings] = useState(false);
@@ -183,6 +184,27 @@ function App() {
       measurementId: GA_MEASUREMENT_ID,
     });
   }, [cookieConsent]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const mobileBreakpoint = window.matchMedia("(max-width: 760px)");
+    const handleBreakpointChange = (event) => {
+      if (!event.matches) {
+        setIsMobileNavOpen(false);
+      }
+    };
+
+    if (typeof mobileBreakpoint.addEventListener === "function") {
+      mobileBreakpoint.addEventListener("change", handleBreakpointChange);
+      return () => mobileBreakpoint.removeEventListener("change", handleBreakpointChange);
+    }
+
+    mobileBreakpoint.addListener(handleBreakpointChange);
+    return () => mobileBreakpoint.removeListener(handleBreakpointChange);
+  }, []);
 
   const setCookieConsentAndClose = (preferences, status) => {
     const normalizedPreferences = sanitizeCookiePreferences(preferences);
@@ -255,6 +277,14 @@ function App() {
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   };
 
+  const handleMobileNavToggle = () => {
+    setIsMobileNavOpen((prev) => !prev);
+  };
+
+  const closeMobileNav = () => {
+    setIsMobileNavOpen(false);
+  };
+
   return (
     <div className="site-shell">
       {seoSchemas.map((schema, index) => (
@@ -269,13 +299,39 @@ function App() {
         <a href="#inicio" className="brand-link" aria-label="BilAI inicio">
           <img src={logo} alt="BilAI" className="brand-logo" />
         </a>
-        <nav className="site-nav" aria-label="Navegación principal">
-          <a href="#facturacion-electronica">Facturación electrónica</a>
-          <a href="#producto">Producto</a>
-          <a href="#soluciones">Soluciones</a>
-          <a href="#faq">FAQ</a>
-          <a href="#ia">IA</a>
-          <a href="#contacto">Contacto</a>
+        <button
+          type="button"
+          className="header-menu-toggle"
+          aria-expanded={isMobileNavOpen}
+          aria-controls="site-main-nav"
+          aria-label={isMobileNavOpen ? "Cerrar menú" : "Abrir menú"}
+          onClick={handleMobileNavToggle}
+        >
+          <span className="material-symbols-rounded">{isMobileNavOpen ? "close" : "menu"}</span>
+        </button>
+        <nav
+          id="site-main-nav"
+          className={`site-nav${isMobileNavOpen ? " is-open" : ""}`}
+          aria-label="Navegación principal"
+        >
+          <a href="#facturacion-electronica" onClick={closeMobileNav}>
+            Facturación electrónica
+          </a>
+          <a href="#producto" onClick={closeMobileNav}>
+            Producto
+          </a>
+          <a href="#soluciones" onClick={closeMobileNav}>
+            Soluciones
+          </a>
+          <a href="#faq" onClick={closeMobileNav}>
+            FAQ
+          </a>
+          <a href="#ia" onClick={closeMobileNav}>
+            IA
+          </a>
+          <a href="#contacto" onClick={closeMobileNav}>
+            Contacto
+          </a>
         </nav>
         <div className="header-actions">
           <a className="header-login" href={LOGIN_URL}>
