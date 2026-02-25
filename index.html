@@ -17,7 +17,7 @@
       name="robots"
       content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
     />
-    <link rel="canonical" href="%VITE_SITE_URL%/" />
+    <link rel="canonical" href="https://example.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />
     <meta property="og:site_name" content="BilAI" />
@@ -26,8 +26,8 @@
       property="og:description"
       content="BilAI: onboarding en pocos clics, sin instalación y prueba gratis de 1 mes para facturación electrónica."
     />
-    <meta property="og:url" content="%VITE_SITE_URL%/" />
-    <meta property="og:image" content="%VITE_SITE_URL%/bilailogocompleto.png" />
+    <meta property="og:url" content="https://example.com/" />
+    <meta property="og:image" content="/bilailogocompleto.png" />
     <meta property="og:image:alt" content="BilAI plataforma de facturación electrónica" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Facturación Electrónica para la Dian en Colombia | BilAI" />
@@ -35,7 +35,7 @@
       name="twitter:description"
       content="BilAI: facturación electrónica para la Dian con prueba gratis de 1 mes."
     />
-    <meta name="twitter:image" content="%VITE_SITE_URL%/bilailogocompleto.png" />
+    <meta name="twitter:image" content="/bilailogocompleto.png" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
@@ -43,6 +43,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.__BILAI_RUNTIME_CONFIG__ = window.__BILAI_RUNTIME_CONFIG__ || {};
+      (function () {
+        var script = document.createElement("script");
+        script.src = "/api/runtime-config.js";
+        script.async = false;
+        document.head.appendChild(script);
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

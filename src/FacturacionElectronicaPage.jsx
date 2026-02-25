@@ -9,14 +9,16 @@ import {
   sanitizeCookiePreferences,
   syncGoogleAnalyticsWithConsent,
 } from "./lib/privacy";
+import { getRuntimeEnv } from "./runtimeConfig";
 
-const LOGIN_URL = (import.meta.env.VITE_LOGIN_URL || "/login").trim();
-const WHATSAPP_URL =
-  import.meta.env.VITE_WHATSAPP_URL ||
-  "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma.";
-const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || "hola@bilai.co";
-const SITE_URL = (import.meta.env.VITE_SITE_URL || "").trim().replace(/\/+$/, "");
-const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID || "").trim();
+const LOGIN_URL = getRuntimeEnv("VITE_LOGIN_URL", "/login");
+const WHATSAPP_URL = getRuntimeEnv(
+  "VITE_WHATSAPP_URL",
+  "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma."
+);
+const CONTACT_EMAIL = getRuntimeEnv("VITE_CONTACT_EMAIL", "hola@bilai.co");
+const SITE_URL = getRuntimeEnv("VITE_SITE_URL", "").replace(/\/+$/, "");
+const GA_MEASUREMENT_ID = getRuntimeEnv("VITE_GA_MEASUREMENT_ID", "");
 
 const valueProps = [
   {
