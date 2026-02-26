@@ -113,6 +113,20 @@ const faqItems = [
   },
 ];
 
+const heroMotionPrimary = [
+  "Factura emitida",
+  "Inventario sincronizado",
+  "Venta conciliada",
+  "Reporte inteligente",
+];
+
+const heroMotionSecondary = [
+  "Dian validada",
+  "Flujo de caja al día",
+  "Riesgo tributario bajo",
+  "Operación sin fricción",
+];
+
 function App() {
   const [formData, setFormData] = useState({
     name: "",
@@ -352,6 +366,30 @@ function App() {
               BilAI transforma cómo administras facturación electrónica, inventarios, ventas y
               reportes para que tu operación sea más simple, más rápida y más confiable.
             </p>
+            <div className="hero-motion reveal delay-2" aria-hidden="true">
+              <div className="hero-motion-head">
+                <span className="material-symbols-rounded">auto_awesome</span>
+                <p>Operación inteligente en movimiento</p>
+              </div>
+              <div className="hero-motion-marquee">
+                <div className="hero-motion-row">
+                  {[...heroMotionPrimary, ...heroMotionPrimary].map((item, index) => (
+                    <span className="motion-pill" key={`primary-${item}-${index}`}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="hero-motion-marquee">
+                <div className="hero-motion-row hero-motion-row--reverse">
+                  {[...heroMotionSecondary, ...heroMotionSecondary].map((item, index) => (
+                    <span className="motion-pill motion-pill--alt" key={`secondary-${item}-${index}`}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className="hero-actions">
               <a className="btn-primary" href="#contacto">
                 Quiero iniciar
