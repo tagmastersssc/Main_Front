@@ -38,10 +38,10 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          echo VITE_LOGIN_URL=$(az keyvault secret show --vault-name main-${{github.ref_name}}-eastus --name VITE-LOGIN-URL --query value) >> $GITHUB_ENV
-          echo VITE_WHATSAPP_URL=$(az keyvault secret show --vault-name main-${{github.ref_name}}-eastus --name VITE-WHATSAPP-URL --query value) >> $GITHUB_ENV
-          echo VITE_CONTACT_EMAIL=$(az keyvault secret show --vault-name main-${{github.ref_name}}-eastus --name VITE-CONTACT-EMAIL --query value) >> $GITHUB_ENV
-          echo VITE_GA_MEASUREMENT_ID=$(az keyvault secret show --vault-name main-${{github.ref_name}}-eastus --name VITE-GA-MEASUREMENT-ID --query value) >> $GITHUB_ENV
+          echo VITE_LOGIN_URL=$(az keyvault secret show --vault-name kmain-${{github.ref_name}}-eastus --name VITE-LOGIN-URL --query value) >> $GITHUB_ENV
+          echo VITE_WHATSAPP_URL=$(az keyvault secret show --vault-name kmain-${{github.ref_name}}-eastus --name VITE-WHATSAPP-URL --query value) >> $GITHUB_ENV
+          echo VITE_CONTACT_EMAIL=$(az keyvault secret show --vault-name kmain-${{github.ref_name}}-eastus --name VITE-CONTACT-EMAIL --query value) >> $GITHUB_ENV
+          echo VITE_GA_MEASUREMENT_ID=$(az keyvault secret show --vault-name kmain-${{github.ref_name}}-eastus --name VITE-GA-MEASUREMENT-ID --query value) >> $GITHUB_ENV
 
 
     - name: npm install, build, and test
