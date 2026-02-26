@@ -9,14 +9,16 @@ import {
   sanitizeCookiePreferences,
   syncGoogleAnalyticsWithConsent,
 } from "./lib/privacy";
+import { getRuntimeEnv } from "./runtimeConfig";
 
-const LOGIN_URL = (import.meta.env.VITE_LOGIN_URL || "/login").trim();
-const WHATSAPP_URL =
-  import.meta.env.VITE_WHATSAPP_URL ||
-  "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma.";
-const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || "hola@bilai.co";
-const GA_MEASUREMENT_ID = (import.meta.env.VITE_GA_MEASUREMENT_ID || "").trim();
-const SITE_URL = (import.meta.env.VITE_SITE_URL || "").trim().replace(/\/+$/, "");
+const LOGIN_URL = getRuntimeEnv("VITE_LOGIN_URL", "/login");
+const WHATSAPP_URL = getRuntimeEnv(
+  "VITE_WHATSAPP_URL",
+  "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma."
+);
+const CONTACT_EMAIL = getRuntimeEnv("VITE_CONTACT_EMAIL", "hola@bilai.co");
+const GA_MEASUREMENT_ID = getRuntimeEnv("VITE_GA_MEASUREMENT_ID", "");
+const SITE_URL = getRuntimeEnv("VITE_SITE_URL", "").replace(/\/+$/, "");
 
 const featureCards = [
   {
@@ -111,6 +113,20 @@ const faqItems = [
   },
 ];
 
+const heroMotionPrimary = [
+  "Factura emitida",
+  "Inventario sincronizado",
+  "Venta conciliada",
+  "Reporte inteligente",
+];
+
+const heroMotionSecondary = [
+  "Dian validada",
+  "Flujo de caja al día",
+  "Riesgo tributario bajo",
+  "Operación sin fricción",
+];
+
 function App() {
   const [formData, setFormData] = useState({
     name: "",
@@ -118,6 +134,7 @@ function App() {
     company: "",
     message: "",
   });
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [cookieConsent, setCookieConsent] = useState(getInitialCookieState);
   const [cookieDraft, setCookieDraft] = useState({ ...DEFAULT_COOKIE_PREFERENCES });
   const [showCookieSettings, setShowCookieSettings] = useState(false);
@@ -181,6 +198,27 @@ function App() {
       measurementId: GA_MEASUREMENT_ID,
     });
   }, [cookieConsent]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const mobileBreakpoint = window.matchMedia("(max-width: 760px)");
+    const handleBreakpointChange = (event) => {
+      if (!event.matches) {
+        setIsMobileNavOpen(false);
+      }
+    };
+
+    if (typeof mobileBreakpoint.addEventListener === "function") {
+      mobileBreakpoint.addEventListener("change", handleBreakpointChange);
+      return () => mobileBreakpoint.removeEventListener("change", handleBreakpointChange);
+    }
+
+    mobileBreakpoint.addListener(handleBreakpointChange);
+    return () => mobileBreakpoint.removeListener(handleBreakpointChange);
+  }, []);
 
   const setCookieConsentAndClose = (preferences, status) => {
     const normalizedPreferences = sanitizeCookiePreferences(preferences);
@@ -253,6 +291,14 @@ function App() {
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
   };
 
+  const handleMobileNavToggle = () => {
+    setIsMobileNavOpen((prev) => !prev);
+  };
+
+  const closeMobileNav = () => {
+    setIsMobileNavOpen(false);
+  };
+
   return (
     <div className="site-shell">
       {seoSchemas.map((schema, index) => (
@@ -267,13 +313,39 @@ function App() {
         <a href="#inicio" className="brand-link" aria-label="BilAI inicio">
           <img src={logo} alt="BilAI" className="brand-logo" />
         </a>
-        <nav className="site-nav" aria-label="Navegación principal">
-          <a href="#facturacion-electronica">Facturación electrónica</a>
-          <a href="#producto">Producto</a>
-          <a href="#soluciones">Soluciones</a>
-          <a href="#faq">FAQ</a>
-          <a href="#ia">IA</a>
-          <a href="#contacto">Contacto</a>
+        <button
+          type="button"
+          className="header-menu-toggle"
+          aria-expanded={isMobileNavOpen}
+          aria-controls="site-main-nav"
+          aria-label={isMobileNavOpen ? "Cerrar menú" : "Abrir menú"}
+          onClick={handleMobileNavToggle}
+        >
+          <span className="material-symbols-rounded">{isMobileNavOpen ? "close" : "menu"}</span>
+        </button>
+        <nav
+          id="site-main-nav"
+          className={`site-nav${isMobileNavOpen ? " is-open" : ""}`}
+          aria-label="Navegación principal"
+        >
+          <a href="#facturacion-electronica" onClick={closeMobileNav}>
+            Facturación electrónica
+          </a>
+          <a href="#producto" onClick={closeMobileNav}>
+            Producto
+          </a>
+          <a href="#soluciones" onClick={closeMobileNav}>
+            Soluciones
+          </a>
+          <a href="#faq" onClick={closeMobileNav}>
+            FAQ
+          </a>
+          <a href="#ia" onClick={closeMobileNav}>
+            IA
+          </a>
+          <a href="#contacto" onClick={closeMobileNav}>
+            Contacto
+          </a>
         </nav>
         <div className="header-actions">
           <a className="header-login" href={LOGIN_URL}>
@@ -294,6 +366,30 @@ function App() {
               BilAI transforma cómo administras facturación electrónica, inventarios, ventas y
               reportes para que tu operación sea más simple, más rápida y más confiable.
             </p>
+            <div className="hero-motion reveal delay-2" aria-hidden="true">
+              <div className="hero-motion-head">
+                <span className="material-symbols-rounded">auto_awesome</span>
+                <p>Operación inteligente en movimiento</p>
+              </div>
+              <div className="hero-motion-marquee">
+                <div className="hero-motion-row">
+                  {[...heroMotionPrimary, ...heroMotionPrimary].map((item, index) => (
+                    <span className="motion-pill" key={`primary-${item}-${index}`}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="hero-motion-marquee">
+                <div className="hero-motion-row hero-motion-row--reverse">
+                  {[...heroMotionSecondary, ...heroMotionSecondary].map((item, index) => (
+                    <span className="motion-pill motion-pill--alt" key={`secondary-${item}-${index}`}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className="hero-actions">
               <a className="btn-primary" href="#contacto">
                 Quiero iniciar
