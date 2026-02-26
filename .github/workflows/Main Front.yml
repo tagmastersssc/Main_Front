@@ -12,7 +12,12 @@ env:
 
 jobs:
   build:
+    permissions:
+      contents: none
+      id-token: write
     runs-on: ubuntu-latest
+    environment:
+      name: "${{github.ref_name}}"
     steps:
     - uses: actions/checkout@v4
 
@@ -22,11 +27,27 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
+    - name: Azure CLI Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Azure CLI script
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          echo VITE_LOGIN_URL=$(az keyvault secret show --vault-name kv-login-${{github.ref_name}}-eastus --name VITE-LOGIN-URL --query value) >> $GITHUB_ENV
+
     - name: npm install, build, and test
       run: |
         npm install
         npm run build
         npm run test --if-present
+      env:
+        VITE_LOGIN_URL: "${{ env.VITE_LOGIN_URL }}"
+
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
       with:
