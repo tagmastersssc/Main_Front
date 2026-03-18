@@ -12,6 +12,7 @@ import {
 import { getRuntimeEnv } from "./runtimeConfig";
 
 const LOGIN_URL = getRuntimeEnv("VITE_LOGIN_URL", "/login");
+LOGIN_URL.replace(/"/g, "");
 console.log("LOGIN_URL:", LOGIN_URL);
 const WHATSAPP_URL = getRuntimeEnv(
   "VITE_WHATSAPP_URL",
