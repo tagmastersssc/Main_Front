@@ -12,7 +12,7 @@ import {
 import { getRuntimeEnv } from "./runtimeConfig";
 
 const LOGIN_URL = getRuntimeEnv("VITE_LOGIN_URL", "/login");
-console.log("LOGIN_URL:", LOGIN_URL);
+
 const WHATSAPP_URL = getRuntimeEnv(
   "VITE_WHATSAPP_URL",
   "https://wa.me/573001112233?text=Hola%20BilAI%2C%20quiero%20conocer%20la%20plataforma."
