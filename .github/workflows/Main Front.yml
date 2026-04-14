@@ -1,5 +1,5 @@
 
-name: Main Front - Deploy app to Azure Web App
+name: Main Front - Deploy app to Azure
 
 on:
   push:
