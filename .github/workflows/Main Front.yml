@@ -6,26 +6,25 @@ on:
     branches: [ "prod","uat" ]
 
 env:
-  AZURE_WEBAPP_NAME: webapp-main-main-front-${{github.ref_name}}-eastus
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '22.x'                # set this to the node version to use
+  APP_LOCATION: "/" # location of your client code
+  APP_ARTIFACT_LOCATION: "dist" # location of client code build output
+
+permissions:
+  contents: read
 
 jobs:
   build:
     permissions:
-      contents: none
+      contents: read
+      pull-requests: write
       id-token: write
     runs-on: ubuntu-latest
     environment:
       name: "${{github.ref_name}}"
     steps:
     - uses: actions/checkout@v4
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
       with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
+        submodules: true
 
     - name: Azure CLI Login
       uses: azure/login@v2
@@ -38,55 +37,24 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          echo VITE_LOGIN_URL=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus --name VITE-LOGIN-URL --query value -o tsv) >> $GITHUB_ENV
-          echo VITE_WHATSAPP_URL=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus --name VITE-WHATSAPP-URL --query value -o tsv) >> $GITHUB_ENV
-          echo VITE_CONTACT_EMAIL=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus --name VITE-CONTACT-EMAIL --query value -o tsv) >> $GITHUB_ENV
-          echo VITE_GA_MEASUREMENT_ID=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus --name VITE-GA-MEASUREMENT-ID --query value -o tsv) >> $GITHUB_ENV
+          echo VITE_LOGIN_URL=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus2 --name VITE-LOGIN-URL --query value -o tsv) >> $GITHUB_ENV
+          echo VITE_WHATSAPP_URL=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus2 --name VITE-WHATSAPP-URL --query value -o tsv) >> $GITHUB_ENV
+          echo VITE_CONTACT_EMAIL=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus2 --name VITE-CONTACT-EMAIL --query value -o tsv) >> $GITHUB_ENV
+          echo VITE_GA_MEASUREMENT_ID=$(az keyvault secret show --vault-name main${{github.ref_name}}-eastus2 --name VITE-GA-MEASUREMENT-ID --query value -o tsv) >> $GITHUB_ENV
 
 
-    - name: npm install, build, and test
-      run: |
-        npm install
-        npm run build
-        npm run test --if-present
+    - name: Build And Deploy
+      id: builddeploy
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: ${{ env.APP_LOCATION }}
+        app_artifact_location: ${{ env.APP_ARTIFACT_LOCATION }}
       env:
         VITE_LOGIN_URL: ${{ env.VITE_LOGIN_URL }}
         VITE_WHATSAPP_URL: ${{ env.VITE_WHATSAPP_URL }}
         VITE_CONTACT_EMAIL: ${{ env.VITE_CONTACT_EMAIL }}
         VITE_GA_MEASUREMENT_ID: ${{ env.VITE_GA_MEASUREMENT_ID }}
 
-    - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v4
-      with:
-        name: node-app
-        path: dist
-
-  deploy:
-    permissions:
-      contents: none
-      id-token: write
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: "${{github.ref_name}}"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v4
-      with:
-        name: node-app
-    
-    - name: Azure CLI Login
-      uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-    - name: 'Deploy to Azure WebApp'
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
