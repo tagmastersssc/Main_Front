@@ -1,13 +1,14 @@
 
-name: Main Front - Deploy app to Azure Web App
+name: Main Front - Deploy app to Azure
+#
 
 on:
   push:
     branches: [ "prod","uat" ]
 
 env:
-  APP_LOCATION: "/" # location of your client code
-  APP_ARTIFACT_LOCATION: "dist" # location of client code build output
+  APP_LOCATION: "/"
+  APP_ARTIFACT_LOCATION: "dist"
 
 permissions:
   contents: read
