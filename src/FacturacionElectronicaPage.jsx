@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import logo from "/bilailogocompleto.png";
+import logo from "/bilai-brand-wordmark-cropped.png";
 import CookieConsentLayer from "./components/CookieConsentLayer";
 import {
   DEFAULT_COOKIE_PREFERENCES,
@@ -107,7 +107,7 @@ const setSeoMetadata = ({ pageUrl }) => {
   const description =
     "Empieza en minutos, sin instalación y sin intervención humana: facturación electrónica para la Dian con prueba gratis de 1 mes.";
   const canonicalUrl = pageUrl ? `${pageUrl}/facturacion-electronica-colombia/` : "";
-  const imageUrl = pageUrl ? `${pageUrl}/bilailogocompleto.png` : "";
+  const imageUrl = pageUrl ? `${pageUrl}/bilai-brand-wordmark-cropped.png` : "";
 
   document.title = title;
 
@@ -332,9 +332,9 @@ function FacturacionElectronicaPage() {
         />
       ))}
 
-      <header className="site-header">
-        <a href="/" className="brand-link" aria-label="Volver al sitio principal de BilAI">
-          <img src={logo} alt="BilAI" className="brand-logo" />
+      <header className="site-header site-header--calibrated">
+        <a href="/" className="brand-link brand-link--full" aria-label="Volver al sitio principal de BilAI">
+          <img src={logo} alt="BilAI" className="brand-logo brand-logo--full" />
         </a>
         <button
           type="button"
@@ -377,9 +377,9 @@ function FacturacionElectronicaPage() {
         </div>
       </header>
 
-      <main>
-        <section className="hero fe-hero" id="inicio">
-          <div className="hero-copy reveal">
+      <main className="site-main fe-main">
+        <section className="hero fe-hero fe-hero--calibrated" id="inicio">
+          <div className="hero-copy hero-copy--fe reveal">
             <p className="hero-kicker">Listo para producción desde el día uno</p>
             <h1>Facturación electrónica para la Dian, fácil de activar</h1>
             <p className="hero-lead">
@@ -410,12 +410,26 @@ function FacturacionElectronicaPage() {
               </li>
             </ul>
           </div>
-          <div className="fe-hero-panel reveal delay-1" aria-hidden="true">
+          <div className="fe-hero-panel fe-hero-panel--calibrated reveal delay-1" aria-hidden="true">
             <h2>Lanza tu operación en minutos, no en semanas</h2>
             <p>
               BilAI fue construida para operar en serio: onboarding ágil, plataforma robusta y
               experiencia simple para salir al mercado rápido.
             </p>
+            <div className="fe-hero-panel-points">
+              <article>
+                <strong>Registro</strong>
+                <span>Activa la cuenta y configura lo esencial sin instalación.</span>
+              </article>
+              <article>
+                <strong>Emisión</strong>
+                <span>Primer comprobante listo con una base pensada para producir.</span>
+              </article>
+              <article>
+                <strong>Control</strong>
+                <span>Inventario, ventas y lectura operativa desde el primer día.</span>
+              </article>
+            </div>
             <a className="btn-primary full" href="#contacto">
               Quiero mi prueba gratis
             </a>

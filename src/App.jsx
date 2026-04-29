@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "/bilailogocompleto.png";
+import logo from "/bilai-brand-wordmark-cropped.png";
 import CookieConsentLayer from "./components/CookieConsentLayer";
 import {
   DEFAULT_COOKIE_PREFERENCES,
@@ -21,112 +21,182 @@ const CONTACT_EMAIL = getRuntimeEnv("VITE_CONTACT_EMAIL", "hola@bilai.co");
 const GA_MEASUREMENT_ID = getRuntimeEnv("VITE_GA_MEASUREMENT_ID", "");
 const SITE_URL = getRuntimeEnv("VITE_SITE_URL", "").replace(/\/+$/, "");
 
-const featureCards = [
+const heroSignals = ["Dian al día", "Inventario vivo", "Ventas visibles", "Decisión asistida"];
+
+const statCards = [
+  {
+    value: 4,
+    suffix: " capas",
+    label: "conectadas en una sola plataforma",
+    detail: "Facturación, ventas, inventario y reportes en una superficie coherente.",
+  },
+  {
+    value: 1,
+    suffix: " flujo",
+    label: "para operar, cumplir y decidir mejor",
+    detail: "Menos herramientas sueltas, más claridad para el equipo y la gerencia.",
+  },
+  {
+    value: 30,
+    suffix: " días",
+    label: "de prueba para validar el ajuste",
+    detail: "Comprueba el valor sobre tu operación real antes de avanzar a un plan.",
+  },
+];
+
+const storyMoments = [
+  {
+    step: "01",
+    title: "Registra ventas y comprobantes en un mismo flujo",
+    description:
+      "La operación diaria entra una sola vez y queda lista para emitir, controlar y analizar sin reprocesos ni cruces manuales.",
+  },
+  {
+    step: "02",
+    title: "Mantén inventario y cumplimiento sincronizados",
+    description:
+      "Cada movimiento actualiza stock y contexto fiscal para reducir fricción, errores y pasos innecesarios antes de emitir.",
+  },
+  {
+    step: "03",
+    title: "Convierte el dato operativo en lectura gerencial",
+    description:
+      "El sistema organiza señales de ventas, inventario y documentos para priorizar acciones con mejor criterio y más contexto.",
+  },
+];
+
+const platformModules = [
   {
     icon: "receipt_long",
-    title: "Facturación electrónica lista para la Dian",
+    eyebrow: "Cumplimiento",
+    title: "Facturación electrónica lista para operar sin fricción",
     description:
-      "Emite comprobantes electrónicos en minutos, con validaciones inteligentes para cumplir normativa sin fricción.",
+      "Emite con validaciones útiles y una base operativa pensada para cumplir con la Dian sin romper el ritmo del negocio.",
+  },
+  {
+    icon: "point_of_sale",
+    eyebrow: "Operación comercial",
+    title: "Ventas y documentos dentro del mismo sistema",
+    description:
+      "Cada venta deja trazabilidad, alimenta indicadores y mantiene el negocio visible sin depender de procesos paralelos.",
   },
   {
     icon: "inventory_2",
-    title: "Inventario conectado en tiempo real",
+    eyebrow: "Control operativo",
+    title: "Inventario conectado con la realidad del día a día",
     description:
-      "Cada venta impacta existencias automáticamente para que tomes decisiones con stock actualizado siempre.",
+      "El stock se mueve con la operación real, evitando descoordinaciones entre lo que se vende, lo que se factura y lo que queda disponible.",
   },
   {
-    icon: "insights",
-    title: "Ventas que se entienden mejor",
+    icon: "monitoring",
+    eyebrow: "Lectura ejecutiva",
+    title: "Reportes que convierten datos en decisiones",
     description:
-      "Centraliza tus canales y analiza desempeño por cliente, periodo y producto desde una sola vista.",
-  },
-  {
-    icon: "auto_awesome",
-    title: "Reportes impulsados con IA",
-    description:
-      "Obtén recomendaciones accionables para mejorar margen, rotación y flujo de caja con menos esfuerzo manual.",
+      "Lecturas comerciales y operativas más limpias para detectar qué está funcionando, qué está drenando margen y dónde intervenir primero.",
   },
 ];
 
 const solutions = [
   {
-    title: "Empresas en crecimiento",
-    text: "Escala procesos de facturación, inventario y reporte sin ampliar equipos administrativos.",
+    title: "Pymes en crecimiento que necesitan ordenar ventas, inventario y cumplimiento",
+    text: "BilAI reemplaza hojas sueltas y procesos paralelos por un flujo más claro para emitir, vender y controlar.",
   },
   {
-    title: "Negocios y pymes",
-    text: "Controla operación diaria con una plataforma simple, clara y lista para usar desde el día uno.",
+    title: "Equipos administrativos que necesitan emitir mejor y reducir reprocesos",
+    text: "La plataforma organiza la captura del dato y las validaciones para que cumplir con la Dian no frene la operación.",
   },
   {
-    title: "Personas naturales",
-    text: "Cumple tus obligaciones tributarias con una experiencia guiada y soporte cercano cuando lo necesites.",
+    title: "Negocios que quieren empezar rápido sin montar una operación compleja",
+    text: "Activa la plataforma en pocos pasos y empieza a trabajar con una base más ordenada desde el primer día.",
   },
 ];
 
-const steps = [
+const intelligenceHighlights = [
   {
-    number: "01",
-    title: "Configura tu operación",
-    description:
-      "Definimos contigo datos fiscales, catálogo y flujos clave para empezar con estructura sólida.",
+    title: "Señales comerciales más rápidas",
+    text: "Detecta cambios en ventas, periodos y movimientos con una lectura más útil que una tabla estática.",
   },
   {
-    number: "02",
-    title: "Factura y vende desde un solo lugar",
-    description:
-      "Gestiona facturas, ventas e inventario en tiempo real sin saltar entre herramientas.",
+    title: "Menos trabajo manual para entender qué está pasando",
+    text: "BilAI organiza el dato operativo para que el equipo pueda leerlo mejor, no solo capturarlo.",
   },
   {
-    number: "03",
-    title: "Toma decisiones con IA",
-    description:
-      "Usa reportes inteligentes para reducir reprocesos y mejorar resultados comerciales cada semana.",
+    title: "IA aplicada con intención, no como decoración",
+    text: "La capa de inteligencia está pensada para ayudarte a ver mejor el negocio y decidir con mayor precisión.",
   },
 ];
 
 const complianceItems = [
-  "Flujos diseñados para cumplimiento con la Dian",
-  "Controles automáticos para evitar errores frecuentes",
-  "Trazabilidad completa de ventas, inventarios y reportes",
-  "Soporte para equipos operativos y financieros",
+  "Controles previos para reducir errores antes de emitir o registrar.",
+  "Trazabilidad entre ventas, inventario y reportes para no perder contexto.",
+  "Lectura más clara para equipos operativos, administrativos y gerenciales.",
+  "Una base útil para actuar antes, no solo para revisar después.",
 ];
 
 const faqItems = [
   {
     question: "¿BilAI sirve para personas naturales, pymes y empresas?",
     answer:
-      "Sí. BilAI está diseñada para adaptarse a operaciones pequeñas y grandes, con una experiencia simple desde el primer día.",
+      "Sí. BilAI está diseñada para adaptarse a operaciones pequeñas y grandes, con una experiencia simple de activar y sólida para crecer.",
   },
   {
     question: "¿Cómo me ayuda BilAI con la Dian?",
     answer:
-      "BilAI simplifica la emisión de facturación electrónica y el control operativo para ayudarte a cumplir con la Dian con menos fricción.",
+      "BilAI organiza la emisión y el control operativo para que cumplir con la Dian se sienta más claro, menos manual y mejor integrado al negocio.",
   },
   {
     question: "¿Necesito instalar algo para comenzar?",
     answer:
-      "No. Es una plataforma web. Te registras en pocos clics y comienzas a operar sin instalaciones ni procesos técnicos complejos.",
+      "No. Es una plataforma web. Te registras, configuras lo esencial y puedes comenzar a operar sin instalaciones ni dependencias técnicas complejas.",
   },
   {
     question: "¿Puedo probar BilAI antes de contratar?",
     answer:
-      "Sí. Puedes iniciar con una prueba gratis de 1 mes para validar el ajuste con tu negocio.",
+      "Sí. Puedes iniciar con una prueba gratis de 1 mes para validar el ajuste con tu operación antes de tomar una decisión.",
   },
 ];
 
-const heroMotionPrimary = [
-  "Factura emitida",
-  "Inventario sincronizado",
-  "Venta conciliada",
-  "Reporte inteligente",
-];
+function AnimatedStat({ value, suffix, label, detail }) {
+  const [displayValue, setDisplayValue] = useState(0);
 
-const heroMotionSecondary = [
-  "Dian validada",
-  "Flujo de caja al día",
-  "Riesgo tributario bajo",
-  "Operación sin fricción",
-];
+  useEffect(() => {
+    let frameId;
+    let startTime;
+
+    const step = (timestamp) => {
+      if (!startTime) {
+        startTime = timestamp;
+      }
+
+      const progress = Math.min((timestamp - startTime) / 1200, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayValue(Math.round(value * eased));
+
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(step);
+      }
+    };
+
+    frameId = window.requestAnimationFrame(step);
+
+    return () => {
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, [value]);
+
+  return (
+    <article className="stat-card" data-reveal>
+      <strong>
+        {displayValue}
+        <span>{suffix}</span>
+      </strong>
+      <h3>{label}</h3>
+      <p>{detail}</p>
+    </article>
+  );
+}
 
 function App() {
   const [formData, setFormData] = useState({
@@ -149,7 +219,7 @@ function App() {
     ...(runtimeSiteUrl
       ? {
           url: runtimeSiteUrl,
-          logo: `${runtimeSiteUrl}/bilailogocompleto.png`,
+          logo: `${runtimeSiteUrl}/bilai-brand-wordmark-cropped.png`,
         }
       : {}),
     contactPoint: [
@@ -170,7 +240,7 @@ function App() {
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     description:
-      "Software de facturación electrónica para Colombia con inventarios, ventas y reportes con IA.",
+      "Plataforma web para facturación electrónica en Colombia con inventarios, ventas y reportes impulsados con IA.",
     ...(runtimeSiteUrl ? { url: runtimeSiteUrl } : {}),
   };
 
@@ -214,11 +284,43 @@ function App() {
 
     if (typeof mobileBreakpoint.addEventListener === "function") {
       mobileBreakpoint.addEventListener("change", handleBreakpointChange);
-      return () => mobileBreakpoint.removeEventListener("change", handleBreakpointChange);
+    } else {
+      mobileBreakpoint.addListener(handleBreakpointChange);
     }
 
-    mobileBreakpoint.addListener(handleBreakpointChange);
-    return () => mobileBreakpoint.removeListener(handleBreakpointChange);
+    return () => {
+      if (typeof mobileBreakpoint.removeEventListener === "function") {
+        mobileBreakpoint.removeEventListener("change", handleBreakpointChange);
+      } else {
+        mobileBreakpoint.removeListener(handleBreakpointChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof IntersectionObserver === "undefined") {
+      return undefined;
+    }
+
+    const revealNodes = Array.from(document.querySelectorAll("[data-reveal]"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    revealNodes.forEach((node) => observer.observe(node));
+
+    return () => observer.disconnect();
   }, []);
 
   const setCookieConsentAndClose = (preferences, status) => {
@@ -310,9 +412,9 @@ function App() {
         />
       ))}
 
-      <header className="site-header">
-        <a href="#inicio" className="brand-link" aria-label="BilAI inicio">
-          <img src={logo} alt="BilAI" className="brand-logo" />
+      <header className="site-header site-header--calibrated">
+        <a href="#inicio" className="brand-link brand-link--full" aria-label="BilAI inicio">
+          <img src={logo} alt="BilAI" className="brand-logo brand-logo--full" />
         </a>
         <button
           type="button"
@@ -358,39 +460,15 @@ function App() {
         </div>
       </header>
 
-      <main>
-        <section className="hero" id="inicio">
-          <div className="hero-copy reveal">
-            <p className="hero-kicker">Fintech colombiana para empresas y personas naturales</p>
-            <h1>Factura fácil. Cumple con la Dian. Gestiona todo con IA.</h1>
+      <main className="site-main">
+        <section className="hero hero--viewport" id="inicio">
+          <div className="hero-copy hero-copy--viewport" data-reveal>
+            <p className="hero-kicker">De datos a decisiones, en tiempo real</p>
+            <h1>Control comercial y fiscal para decidir con claridad.</h1>
             <p className="hero-lead">
-              BilAI transforma cómo administras facturación electrónica, inventarios, ventas y
-              reportes para que tu operación sea más simple, más rápida y más confiable.
+              BilAI conecta facturación electrónica, inventario, ventas y reportes en una plataforma
+              precisa y elegante, diseñada para ayudarte a operar mejor y leer el negocio con más control.
             </p>
-            <div className="hero-motion reveal delay-2" aria-hidden="true">
-              <div className="hero-motion-head">
-                <span className="material-symbols-rounded">auto_awesome</span>
-                <p>Operación inteligente en movimiento</p>
-              </div>
-              <div className="hero-motion-marquee">
-                <div className="hero-motion-row">
-                  {[...heroMotionPrimary, ...heroMotionPrimary].map((item, index) => (
-                    <span className="motion-pill" key={`primary-${item}-${index}`}>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="hero-motion-marquee">
-                <div className="hero-motion-row hero-motion-row--reverse">
-                  {[...heroMotionSecondary, ...heroMotionSecondary].map((item, index) => (
-                    <span className="motion-pill motion-pill--alt" key={`secondary-${item}-${index}`}>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
             <div className="hero-actions">
               <a className="btn-primary" href="#contacto">
                 Quiero iniciar
@@ -399,132 +477,189 @@ function App() {
                 Hablar por WhatsApp
               </a>
             </div>
-            <ul className="hero-proof">
-              <li>
-                <span className="material-symbols-rounded">verified</span>
-                Cumplimiento tributario asistido
-              </li>
-              <li>
-                <span className="material-symbols-rounded">bolt</span>
-                Implementación ágil para cualquier tamaño de negocio
-              </li>
-              <li>
-                <span className="material-symbols-rounded">shield</span>
-                Plataforma segura y escalable
-              </li>
-            </ul>
-          </div>
-
-          <div className="hero-visual reveal delay-1" aria-hidden="true">
-            <div className="orb orb-a" />
-            <div className="orb orb-b" />
-            <div className="product-frame">
-              <div className="frame-head">
-                <strong>BilAI Platform</strong>
-                <span>Operación en tiempo real</span>
-              </div>
-              <div className="frame-grid">
-                <article>
-                  <span className="material-symbols-rounded">receipt</span>
-                  <h3>Factura electrónica</h3>
-                  <p>Emitida y validada para la Dian.</p>
-                </article>
-                <article>
-                  <span className="material-symbols-rounded">inventory_2</span>
-                  <h3>Inventario vivo</h3>
-                  <p>Stock ajustado con cada venta.</p>
-                </article>
-                <article>
-                  <span className="material-symbols-rounded">insights</span>
-                  <h3>Ventas inteligentes</h3>
-                  <p>Métricas accionables por canal.</p>
-                </article>
-                <article>
-                  <span className="material-symbols-rounded">auto_awesome</span>
-                  <h3>Reportes con IA</h3>
-                  <p>Recomendaciones para crecer.</p>
-                </article>
+            <div className="hero-proofline">
+              <span className="hero-proof-label">BilAI Signal Layer</span>
+              <div className="hero-proof-marquee" aria-hidden="true">
+                <div className="hero-proof-track">
+                  {[...heroSignals, ...heroSignals].map((signal, index) => (
+                    <span className="proof-chip" key={`${signal}-${index}`}>
+                      {signal}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="floating-note note-top">Listo para cumplimiento con la Dian</div>
-            <div className="floating-note note-bottom">Soporte para equipos de cualquier tamaño</div>
           </div>
-        </section>
 
-        <section className="signal-bar reveal">
-          <p>Una sola plataforma para ventas, facturación, inventario y reportes confiables.</p>
-        </section>
+          <div className="hero-system hero-system--viewport" data-reveal>
+            <div className="system-shell system-shell--viewport">
+              <div className="system-topbar">
+                <div>
+                  <strong>BilAI control surface</strong>
+                  <span>Facturación, operación y lectura gerencial</span>
+                </div>
+                <p>Plataforma web lista para producir</p>
+              </div>
+              <div className="system-main-grid">
+                <article className="system-command-card">
+                  <div className="system-command-stage">
+                    <div className="system-stage-bar">
+                      <span>Evento operativo</span>
+                      <strong>Una venta actualiza todo el sistema</strong>
+                    </div>
+                    <div className="system-stage-grid">
+                      <article className="system-stage-tile">
+                        <small>01</small>
+                        <strong>Factura emitida</strong>
+                        <p>Validaciones listas para producir sin separar la operación del cumplimiento.</p>
+                      </article>
+                      <article className="system-stage-tile">
+                        <small>02</small>
+                        <strong>Stock ajustado</strong>
+                        <p>Inventario sincronizado al instante con cada movimiento confirmado.</p>
+                      </article>
+                      <article className="system-stage-tile system-stage-tile--wide">
+                        <small>03</small>
+                        <strong>Lectura gerencial activada</strong>
+                        <p>La venta alimenta señales comerciales y operativas para decidir con más contexto.</p>
+                      </article>
+                    </div>
+                  </div>
+                  <div className="system-command-copy">
+                    <span>Core layer</span>
+                    <h2>Opera, cumple y decide desde una sola base.</h2>
+                  </div>
+                </article>
 
-        <section className="section section-soft reveal" id="facturacion-electronica">
-          <div className="section-head">
-            <p className="section-kicker">Facturación Electrónica</p>
-            <h2>La forma más simple de facturar electrónicamente y cumplir con la Dian</h2>
-            <p>
-              Regístrate en pocos clics, sin instalación, y empieza a operar con facturación
-              electrónica, ventas, inventario y reportes desde una sola plataforma.
-            </p>
-            <div className="section-inline-actions">
-              <a className="btn-secondary" href="/facturacion-electronica-colombia/">
-                Ver página de facturación electrónica
-              </a>
+                <div className="system-side-stack">
+                  <article className="system-mini-card system-mini-card--ice">
+                    <span className="material-symbols-rounded">receipt_long</span>
+                    <strong>Facturación con criterio operativo</strong>
+                    <p>Emitir correctamente sin separar lo fiscal de lo comercial.</p>
+                  </article>
+                  <article className="system-mini-card">
+                    <span className="material-symbols-rounded">inventory_2</span>
+                    <strong>Inventario que responde al movimiento real</strong>
+                    <p>Lo que vendes, lo que facturas y lo que queda disponible se mantiene alineado.</p>
+                  </article>
+                  <article className="system-mini-card system-mini-card--mint">
+                    <span className="material-symbols-rounded">monitoring</span>
+                    <strong>Señales de negocio más rápidas</strong>
+                    <p>Menos intuición ciega, más contexto para actuar con precisión.</p>
+                  </article>
+                </div>
+              </div>
+              <div className="system-floor">
+                <p>BilAI no es solo una herramienta para emitir. Es una capa operativa para vender, cumplir y decidir con más control.</p>
+              </div>
             </div>
           </div>
-          <div className="seo-grid">
-            <article className="seo-card">
-              <h3>Cumplimiento con la Dian, sin complicaciones</h3>
+        </section>
+
+        <section className="stats-band" data-reveal>
+          {statCards.map((stat) => (
+            <AnimatedStat key={stat.label} {...stat} />
+          ))}
+        </section>
+
+        <section className="narrative-section narrative-section--compact section-shell" id="facturacion-electronica">
+          <div className="narrative-intro narrative-intro--split" data-reveal>
+            <div className="section-head-main">
+              <p className="section-kicker">Facturación electrónica</p>
+              <h2>Facturación electrónica conectada con la operación real del negocio.</h2>
               <p>
-                Estructura y validaciones pensadas para ayudarte a operar correctamente desde el
-                primer día.
+                Emitir bien importa, pero el valor aparece cuando cada documento alimenta inventario, ventas y lectura gerencial sin pasos paralelos.
               </p>
-            </article>
-            <article className="seo-card">
-              <h3>Onboarding rápido para empezar hoy</h3>
-              <p>
-                Crea tu cuenta, configura lo esencial y empieza a emitir sin procesos largos ni
-                dependencias técnicas.
-              </p>
-            </article>
-            <article className="seo-card">
-              <h3>Prueba gratis de 1 mes</h3>
-              <p>
-                Evalúa BilAI en tu operación real y decide con datos antes de avanzar a un plan.
-              </p>
-            </article>
+            </div>
+            <aside className="section-head-aside">
+              <span>Un solo flujo</span>
+              <p>Registro, emisión y lectura operativa dentro de una misma base, sin procesos paralelos ni dobles capturas.</p>
+              <div className="section-inline-actions">
+                <a className="btn-secondary" href="/facturacion-electronica-colombia/">
+                  Ver página de facturación electrónica
+                </a>
+              </div>
+            </aside>
+          </div>
+          <div className="story-layout">
+            <aside className="story-anchor" data-reveal>
+              <span className="story-anchor-line" />
+              <strong>Del documento a la decisión</strong>
+              <p>Tres pasos para convertir emisión, control y lectura del negocio en un solo flujo.</p>
+            </aside>
+            <div className="story-stack">
+              {storyMoments.map((moment, index) => (
+                <article
+                  className="story-card"
+                  key={moment.step}
+                  data-reveal
+                  style={{ "--reveal-delay": `${index * 0.08}s` }}
+                >
+                  <span className="story-step">{moment.step}</span>
+                  <h3>{moment.title}</h3>
+                  <p>{moment.description}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section className="section reveal" id="producto">
-          <div className="section-head">
-            <p className="section-kicker">Producto</p>
-            <h2>Todo lo que necesitas para operar sin fricciones</h2>
-            <p>
-              Diseñamos BilAI para simplificar la gestión comercial y tributaria con una
-              experiencia clara, moderna y accionable.
-            </p>
+        <section className="section-shell platform-section platform-section--compact" id="producto">
+          <div className="section-head section-head--split" data-reveal>
+            <div className="section-head-main">
+              <p className="section-kicker">Producto</p>
+              <h2>Una plataforma que conecta cumplimiento, operación y lectura comercial.</h2>
+              <p>
+                Cada módulo resuelve una parte crítica del negocio, pero gana valor cuando trabaja conectado con los demás.
+              </p>
+            </div>
+            <aside className="section-head-aside">
+              <span>4 módulos conectados</span>
+              <p>Facturación, ventas, inventario y reportes comparten contexto para que la operación no dependa de herramientas sueltas.</p>
+            </aside>
           </div>
-          <div className="feature-grid">
-            {featureCards.map((feature) => (
-              <article className="feature-card" key={feature.title}>
-                <span className="material-symbols-rounded">{feature.icon}</span>
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
+          <div className="platform-grid">
+            {platformModules.map((module, index) => (
+              <article
+                className="platform-card"
+                key={module.title}
+                data-reveal
+                style={{ "--reveal-delay": `${index * 0.07}s` }}
+              >
+                <div className="platform-card-head">
+                  <span className="material-symbols-rounded">{module.icon}</span>
+                  <p>{module.eyebrow}</p>
+                </div>
+                <h3>{module.title}</h3>
+                <p>{module.description}</p>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="section section-soft reveal" id="soluciones">
-          <div className="section-head">
-            <p className="section-kicker">Soluciones</p>
-            <h2>Hecho para cada etapa de crecimiento</h2>
-            <p>
-              Desde profesionales independientes hasta empresas consolidadas: BilAI acompaña tu
-              evolución con procesos simples y control total.
-            </p>
+        <section className="section-shell solutions-section" id="soluciones">
+          <div className="section-head section-head--split" data-reveal>
+            <div className="section-head-main">
+              <p className="section-kicker">Soluciones</p>
+              <h2>BilAI se adapta a distintas operaciones sin perder claridad ni control.</h2>
+              <p>
+                La plataforma cambia según el ritmo del negocio, pero mantiene la misma base: emitir mejor, operar con más orden y decidir con mejor información.
+              </p>
+            </div>
+            <aside className="section-head-aside">
+              <span>Distintos ritmos, misma base</span>
+              <p>La misma plataforma sirve para ordenar una pyme, profesionalizar un equipo administrativo o arrancar una operación nueva sin complejidad extra.</p>
+            </aside>
           </div>
-          <div className="solution-grid">
-            {solutions.map((item) => (
-              <article className="solution-card" key={item.title}>
+          <div className="solutions-grid">
+            {solutions.map((item, index) => (
+              <article
+                className="solution-panel"
+                key={item.title}
+                data-reveal
+                style={{ "--reveal-delay": `${index * 0.08}s` }}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
               </article>
@@ -532,27 +667,30 @@ function App() {
           </div>
         </section>
 
-        <section className="section reveal" id="ia">
-          <div className="ai-layout">
-            <div className="ai-panel">
+        <section className="intelligence-section section-shell" id="ia">
+          <div className="intelligence-shell">
+            <div className="intelligence-copy" data-reveal>
               <p className="section-kicker">IA aplicada al negocio</p>
-              <h2>De datos sueltos a decisiones precisas</h2>
+              <h2>IA para leer mejor el negocio, no solo para mostrar datos.</h2>
               <p>
-                Nuestra IA convierte datos operativos en recomendaciones prácticas para optimizar
-                ventas, inventario y cumplimiento tributario.
+                BilAI organiza señales comerciales y operativas para ayudarte a detectar cambios, priorizar acciones y decidir con más rapidez.
               </p>
-              <div className="step-grid">
-                {steps.map((step) => (
-                  <article className="step-card" key={step.number}>
-                    <span>{step.number}</span>
-                    <h3>{step.title}</h3>
-                    <p>{step.description}</p>
+              <div className="intelligence-highlights">
+                {intelligenceHighlights.map((item, index) => (
+                  <article
+                    className="intelligence-card"
+                    key={item.title}
+                    data-reveal
+                    style={{ "--reveal-delay": `${index * 0.08}s` }}
+                  >
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
                   </article>
                 ))}
               </div>
             </div>
-            <aside className="compliance-panel">
-              <h3>Compromiso con la Dian y control operativo</h3>
+            <aside className="intelligence-panel" data-reveal>
+              <h3>Control operativo y cumplimiento con una lectura más visible</h3>
               <ul>
                 {complianceItems.map((item) => (
                   <li key={item}>
@@ -568,14 +706,20 @@ function App() {
           </div>
         </section>
 
-        <section className="section section-soft reveal" id="faq">
-          <div className="section-head">
-            <p className="section-kicker">FAQ</p>
-            <h2>Respuestas rápidas antes de comenzar</h2>
+        <section className="section-shell faq-section" id="faq">
+          <div className="section-head section-head--split" data-reveal>
+            <div className="section-head-main">
+              <p className="section-kicker">FAQ</p>
+              <h2>Respuestas claras antes de comenzar</h2>
+            </div>
+            <aside className="section-head-aside">
+              <span>Lo esencial primero</span>
+              <p>Una vista rápida de lo que más suele preguntarse antes de activar la plataforma o iniciar la prueba.</p>
+            </aside>
           </div>
           <div className="faq-grid">
-            {faqItems.map((item) => (
-              <article className="faq-card" key={item.question}>
+            {faqItems.map((item, index) => (
+              <article className="faq-card" key={item.question} data-reveal style={{ "--reveal-delay": `${index * 0.06}s` }}>
                 <h3>{item.question}</h3>
                 <p>{item.answer}</p>
               </article>
@@ -583,13 +727,12 @@ function App() {
           </div>
         </section>
 
-        <section className="section contact-section reveal" id="contacto">
-          <div className="contact-copy">
+        <section className="section-shell contact-section" id="contacto">
+          <div className="contact-copy" data-reveal>
             <p className="section-kicker">Hablemos</p>
-            <h2>Capta más valor desde tu primera factura</h2>
+            <h2>Conversemos sobre tu operación y pongamos la base correcta desde el inicio.</h2>
             <p>
-              Cuéntanos tu operación y te ayudamos a iniciar con un plan claro para facturación,
-              inventarios, ventas y reportes.
+              Cuéntanos cómo facturas, vendes y controlas hoy. Te mostramos cómo empezar con una base más clara para cumplimiento, inventario y reportes.
             </p>
             <div className="contact-links">
               <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
@@ -607,7 +750,7 @@ function App() {
             </div>
           </div>
 
-          <form className="contact-form" onSubmit={handleSubmit}>
+          <form className="contact-form" onSubmit={handleSubmit} data-reveal>
             <label>
               Nombre
               <input
@@ -661,7 +804,7 @@ function App() {
       <footer className="site-footer">
         <img src={logo} alt="BilAI" />
         <div className="footer-meta">
-          <p>BilAI | Fintech Colombiana para facturación electrónica, inventarios, ventas y reportes.</p>
+          <p>BilAI | Plataforma para facturación electrónica, inventario, ventas y reportes con una lectura comercial y fiscal más clara, precisa y accionable.</p>
           <button type="button" className="footer-cookie-btn" onClick={openCookieSettings}>
             Preferencias de cookies
           </button>
